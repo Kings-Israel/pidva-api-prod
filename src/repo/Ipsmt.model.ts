@@ -54,8 +54,8 @@ export interface IPelReq {
     request_date:string ,
     package_cost_currency :string,
     api_req_channel:string,
-    user_id:number
-    
+    user_id:number,
+    medium: string;
 }
 
 

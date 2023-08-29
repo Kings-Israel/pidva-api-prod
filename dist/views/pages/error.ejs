@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+<body class="container">
+
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+
+<main>
+  <div class="jumbotron">
+    <h3>Error No Callback Done ..Kindly use the simulation Api to simulate a verification and the callback should point to https://kycapi.pidva.africa/api/callback</h3>
+    <h4>Use the below sample Data to call the single request api : note where the callback is pointing to </h4>
+    <p>
+
+        {
+            "client_reference":"abcd123",
+            "callback":"https://kycapi.pidva.africa/api/callback",
+            "terms_and_condition":true,
+            "validation_data":{
+                    "client_number": "test_api_req_31211",
+                    "dataset_citizenship": "Kenya",
+                    "dataset_name": "bg_api_company_31211",
+                    "module_code": "CO",
+                    "package_id": 31,
+                    "registration_number": "REG-API_31211",
+                    "req_plan": "CO"
+            }
+            
+        
+        }
+    </p>
+</div>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+
+
+</body>
+</html>

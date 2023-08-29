@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const singleRequest_1 = __importDefault(require("./singleRequest"));
+const batchRequest_1 = __importDefault(require("./batchRequest"));
+const simulationRequest_1 = __importDefault(require("./simulationRequest"));
+const loginRequest_1 = __importDefault(require("./loginRequest"));
+const callback_1 = __importDefault(require("./callback"));
+const requestdetails_1 = __importDefault(require("./requestdetails"));
+const router = express_1.default.Router();
+(0, loginRequest_1.default)(router);
+(0, singleRequest_1.default)(router);
+(0, batchRequest_1.default)(router);
+(0, simulationRequest_1.default)(router);
+(0, callback_1.default)(router);
+(0, requestdetails_1.default)(router);
+exports.default = router;
