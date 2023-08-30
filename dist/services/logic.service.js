@@ -43,6 +43,9 @@ var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _ar
     function reject(value) { resume("throw", value); }
     function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.clientLogin = exports.processQueueMessage = exports.testSimulation = exports.FetchPeldataByClientRef = exports.fetchDetailsByRef = exports.saveApiRequest = void 0;
 const mysql_connector_1 = require("../config/mysql.connector");
@@ -50,7 +53,7 @@ const config_1 = require("../config/config");
 const callback = __importStar(require("../interfaces/callback"));
 const querries_1 = require("../repo/querries");
 const service_report_1 = require("../report/service.report");
-const crypto_1 = __importStar(require("crypto"));
+const crypto_1 = __importDefault(require("crypto"));
 const Amqp = __importStar(require("../interfaces/queue"));
 const request_validation_1 = require("../validations/request.validation");
 const api_security_1 = require("../security/api.security");
@@ -256,7 +259,7 @@ const validateAndSaveRequest = (data, system_reference, requestData, request_ref
             if (!PackageDetails) {
                 throw new Error(" Invalid Package id ");
             }
-            const request_ref = (0, crypto_1.randomUUID)();
+            // const request_ref = randomUUID();
             const pelData = {
                 request_ref_number: request_ref_number.toUpperCase(),
                 company_name: requestData.company_name,
@@ -293,9 +296,9 @@ const validateAndSaveRequest = (data, system_reference, requestData, request_ref
             // console.log(" === Pel data === ",pelData)
             yield savePelRequest(pelData);
             const pelModuleData = {
-                request_id: request_ref,
+                request_id: request_ref_number,
                 client_id: requestData.client_id,
-                request_ref_number: request_ref,
+                request_ref_number: request_ref_number,
                 parent_module_id: ModuleDetails.module_id,
                 module_cost_quote: ModuleDetails.module_cost,
                 package_name: PackageDetails.package_name,

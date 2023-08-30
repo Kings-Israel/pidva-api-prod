@@ -239,7 +239,7 @@ const validateAndSaveRequest = <T>(
         throw new Error(" Invalid Package id ");
       }
 
-      const request_ref = randomUUID();
+      // const request_ref = randomUUID();
       const pelData: IPelReq = {
         request_ref_number: request_ref_number.toUpperCase(),
         company_name: requestData.company_name,
@@ -277,9 +277,9 @@ const validateAndSaveRequest = <T>(
       await savePelRequest(pelData);
 
       const pelModuleData: IPelModule = {
-        request_id: request_ref,
+        request_id: request_ref_number,
         client_id: requestData.client_id,
-        request_ref_number: request_ref,
+        request_ref_number: request_ref_number,
         parent_module_id: ModuleDetails.module_id,
         module_cost_quote: ModuleDetails.module_cost,
         package_name: PackageDetails.package_name,
