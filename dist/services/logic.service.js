@@ -247,6 +247,10 @@ const FetchPeldataByClientRef = (client_reference) => {
     }));
 };
 exports.FetchPeldataByClientRef = FetchPeldataByClientRef;
+function addHours(date, hours) {
+    date.setHours(date.getHours() + hours);
+    return date;
+}
 // here we save details
 const validateAndSaveRequest = (data, system_reference, requestData, request_ref_number) => {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
@@ -284,9 +288,9 @@ const validateAndSaveRequest = (data, system_reference, requestData, request_ref
                 api_number_of_records: requestData.number_of_records,
                 api_upload_path: requestData.upload_path,
                 api_callback_status: "PENDING",
-                api_system_request: system_reference,
+                api_system_request: request_ref_number.toUpperCase(),
                 dataset_citizenship: data.dataset_citizenship,
-                request_date: new Date().toISOString().slice(0, 19).replace("T", " "),
+                request_date: addHours(new Date(), 3).toISOString().slice(0, 19).replace("T", " "),
                 package_cost_currency: PackageDetails.package_currency,
                 api_req_channel: requestData.channel,
                 user_id: requestData.user_id,
