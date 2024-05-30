@@ -225,5 +225,53 @@ export const PelezaQueries = {
     WHERE
        client_company_id = ? AND  client_login_username=?
   `,
+
+  findPelDataByCompany: `
+    SELECT
+      pel_psmt_request.request_ref_number,
+      pel_psmt_request.company_name,
+      pel_psmt_request.client_number,
+      pel_psmt_request.client_name,
+      pel_psmt_request.bg_dataset_name,
+      pel_psmt_request.user_name,
+      pel_psmt_request.client_id,
+      pel_psmt_request.file_tracker,
+      pel_psmt_request.request_credit_charged,
+      pel_psmt_request.package_cost,
+      pel_psmt_request.package_id,
+      pel_psmt_request.request_package,
+      pel_psmt_request.request_plan ,
+      pel_psmt_request.request_type,
+      pel_psmt_request.registration_number,
+      pel_psmt_request.status,
+      pel_psmt_request.api_request_type,
+      pel_psmt_request.api_request_sub_type ,
+      pel_psmt_request.api_client_reference ,
+      pel_psmt_request.api_callback_url ,
+      pel_psmt_request.api_number_of_records ,
+      pel_psmt_request.api_upload_path ,
+      pel_psmt_request.api_callback_status ,
+      pel_psmt_request.api_system_request 
+    FROM pel_psmt_request 
+    WHERE
+      company_name = ?
+    `,
+
+  findPelCompanyData: `
+    SELECT
+      pel_company_registration.company_name,
+      pel_company_registration.status,
+      pel_company_registration.kra_pin,
+      pel_company_registration.registration_number,
+      pel_company_registration.registration_date,
+      pel_company_registration.address,
+      pel_company_registration.postal_address,
+      pel_company_registration.email_address,
+      pel_company_registration.mobile_number,
+      pel_company_registration.offices
+    FROM pel_company_registration 
+    WHERE
+    search_id IN ( ? )
+    `,
 }
 

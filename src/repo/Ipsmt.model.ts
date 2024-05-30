@@ -113,3 +113,14 @@ export interface ICompanyData {
     company_id:number ,
     company_code:string ,
 }
+
+export interface IPelCompanyData {
+    company_nane: string,
+    email_address: string,
+    status: string,
+    registration_number: string,
+    mobile_number: string,
+    registration_date: string,
+    address: string,
+    offices: string,
+}

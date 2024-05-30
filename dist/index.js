@@ -37,31 +37,28 @@ const MySQLConnector = __importStar(require("./config/mysql.connector"));
 const app = (0, express_1.default)();
 const port = 3737;
 MySQLConnector.init();
-app.set('views', path_1.default.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set("views", path_1.default.join(__dirname, "views"));
+app.set("view engine", "ejs");
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.get('/', function (req, res) {
-    res.render('pages/index');
+app.get("/", function (req, res) {
+    res.render("pages/index");
 });
-app.use('/api', api_1.default);
+app.use("/api", api_1.default);
 //app.get('/', (req, res) => res.send('Express + TypeScript Server'));
 app.use((err, _req, res, next) => {
     /**
      * Handle 401 thrown by express-jwt library
      */
-    if (err.name === 'UnauthorizedError') {
-        return res
-            .status(err.status)
-            .send({ message: err.message })
-            .end();
+    if (err.name === "UnauthorizedError") {
+        return res.status(err.status).send({ message: err.message }).end();
     }
     return next(err);
 });
 app.use((_req, _res, next) => {
-    const err = new Error('Not Found');
-    err['status'] = 404;
+    const err = new Error("Not Found");
+    err["status"] = 404;
     next(err);
 });
 app.use((err, _req, res, next) => {

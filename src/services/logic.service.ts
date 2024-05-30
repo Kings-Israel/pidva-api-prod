@@ -10,6 +10,7 @@ import {
   IPelData,
   IClientData,
   ICompanyData,
+  IPelCompanyData,
 } from "../repo/Ipsmt.model";
 import { fetchCallbackData } from "../report/service.report";
 import crypto, { randomUUID } from "crypto";
@@ -75,6 +76,16 @@ async function findPeldataByRef(request_ref) {
 async function findPeldataByClientRef(client_reference) {
   return execute<IPelData>(PelezaQueries.findPeldataByClientRef, [
     client_reference,
+  ]);
+}
+
+async function findPelDataByCompany(client_company_id) {
+  return execute<IPelData>(PelezaQueries.findPelDataByCompany, [client_company_id]);
+}
+
+async function findPelCompanyData(search_ids) {
+  return execute<IPelCompanyData>(PelezaQueries.findPelCompanyData, [
+    search_ids,
   ]);
 }
 
@@ -315,6 +326,31 @@ export const testSimulation = async (request_id) => {
   const msg = new Amqp.Message(request_id);
   exchange.send(msg);
   console.log(" === Test simulation message sent ===");
+};
+
+export const FetchPeldataByCompany = (client_reference: string): Promise<any> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const pelData = await findPelDataByCompany(client_reference);
+      if (!pelData) {
+        throw new Error(" Invalid client_id  ");
+      }
+      return resolve(pelData);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const FetchPelCompanyData = (search_ids: Array<string>): Promise<any> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const pelData = await findPelCompanyData(search_ids);
+      return resolve(pelData);
+    } catch (error) {
+      return reject(error);
+    }
+  });
 };
 
 export const processQueueMessage = async (request_id) => {

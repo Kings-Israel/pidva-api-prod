@@ -34,12 +34,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const BussinesLogicService = __importStar(require("../services/logic.service"));
 const api_security_1 = require("../security/api.security");
+const mysql_connector_1 = require("../config/mysql.connector");
+const querries_1 = require("../repo/querries");
 exports.default = (router) => {
-    router.get('/details/:ref', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get("/details/:ref", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             console.log(" == Fetching details for ref == ", req.params.ref);
             if (!req.params.ref) {
-                throw new Error(' Reference is Required ');
+                throw new Error(" Reference is Required ");
             }
             const details = yield BussinesLogicService.fetchDetailsByRef(req.params.ref);
             return res.status(200).json(details);
@@ -48,10 +50,10 @@ exports.default = (router) => {
             return res.status(502).json(error.message);
         }
     }));
-    router.get('/ourrequest/:ref', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get("/ourrequest/:ref", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (!req.params.ref) {
-                throw new Error(' Reference is Required ');
+                throw new Error(" Reference is Required ");
             }
             const details = yield BussinesLogicService.FetchPeldataByClientRef(req.params.ref);
             return res.status(200).json(details);
@@ -60,13 +62,52 @@ exports.default = (router) => {
             return res.status(502).json(error.message);
         }
     }));
-    // api to retry callback 
-    router.post('/retrycallback', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get("/requests/:type?", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const tkn = req.body.token || req.header("token");
+        const client_id = req.body.client_id || req.header("client_id");
+        if (!tkn) {
+            const errMsg = {
+                message: "token missing in header",
+            };
+            return res.status(403).json(errMsg);
+        }
+        if (!client_id) {
+            const errMsg = {
+                message: "Pass client id in header",
+            };
+            return res.status(403).json(errMsg);
+        }
+        const type = req.params.type;
+        const CompanyResult = (yield (0, mysql_connector_1.execute)(querries_1.PelezaQueries.FetchCompany, [client_id]))[0];
+        const details = yield BussinesLogicService.FetchPeldataByCompany(CompanyResult.company_name);
+        const pel_search_ids = [];
+        details.forEach((detail) => {
+            pel_search_ids.push(detail.request_ref_number);
+        });
+        const company_details = yield BussinesLogicService.FetchPelCompanyData(pel_search_ids);
+        let data = [];
+        if (type == "llc") {
+            data = company_details.filter((detail) => {
+                !detail.registration_number.startsWith("PVT");
+            });
+        }
+        else if (type === "proprietor") {
+            data = company_details.filter((detail) => {
+                !detail.registration_number.startsWith("BN");
+            });
+        }
+        else {
+            data = company_details;
+        }
+        return res.status(200).json(data);
+    }));
+    // api to retry callback
+    router.post("/retrycallback", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const tkn = req.body.token || req.header('token');
+            const tkn = req.body.token || req.header("token");
             if (!tkn) {
-                let errMsg = {
-                    message: 'token missing in header'
+                const errMsg = {
+                    message: "token missing in header",
                 };
                 return res.status(403).json(errMsg);
             }
@@ -79,7 +120,7 @@ exports.default = (router) => {
         }
         catch (e) {
             const errMsg = {
-                message: e.message
+                message: e.message,
             };
             return res.status(502).json(errMsg);
         }

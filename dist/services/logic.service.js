@@ -47,7 +47,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clientLogin = exports.processQueueMessage = exports.testSimulation = exports.FetchPeldataByClientRef = exports.fetchDetailsByRef = exports.saveApiRequest = void 0;
+exports.clientLogin = exports.processQueueMessage = exports.FetchPelCompanyData = exports.FetchPeldataByCompany = exports.testSimulation = exports.FetchPeldataByClientRef = exports.fetchDetailsByRef = exports.saveApiRequest = void 0;
 const mysql_connector_1 = require("../config/mysql.connector");
 const config_1 = require("../config/config");
 const callback = __importStar(require("../interfaces/callback"));
@@ -108,6 +108,18 @@ function findPeldataByClientRef(client_reference) {
     return __awaiter(this, void 0, void 0, function* () {
         return (0, mysql_connector_1.execute)(querries_1.PelezaQueries.findPeldataByClientRef, [
             client_reference,
+        ]);
+    });
+}
+function findPelDataByCompany(client_company_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return (0, mysql_connector_1.execute)(querries_1.PelezaQueries.findPelDataByCompany, [client_company_id]);
+    });
+}
+function findPelCompanyData(search_ids) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return (0, mysql_connector_1.execute)(querries_1.PelezaQueries.findPelCompanyData, [
+            search_ids,
         ]);
     });
 }
@@ -335,6 +347,33 @@ const testSimulation = (request_id) => __awaiter(void 0, void 0, void 0, functio
     console.log(" === Test simulation message sent ===");
 });
 exports.testSimulation = testSimulation;
+const FetchPeldataByCompany = (client_reference) => {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const pelData = yield findPelDataByCompany(client_reference);
+            if (!pelData) {
+                throw new Error(" Invalid client_id  ");
+            }
+            return resolve(pelData);
+        }
+        catch (error) {
+            return reject(error);
+        }
+    }));
+};
+exports.FetchPeldataByCompany = FetchPeldataByCompany;
+const FetchPelCompanyData = (search_ids) => {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const pelData = yield findPelCompanyData(search_ids);
+            return resolve(pelData);
+        }
+        catch (error) {
+            return reject(error);
+        }
+    }));
+};
+exports.FetchPelCompanyData = FetchPelCompanyData;
 const processQueueMessage = (request_id) => __awaiter(void 0, void 0, void 0, function* () {
     ///
     try {
